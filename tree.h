@@ -43,30 +43,59 @@ public:
 
 template <typename T>
 class Tree {
-private:
-    Node<T>* root;
-    vector<Node<T>*> allNodes;
-
-
 public:
-    Tree() : root(nullptr) {}
-    // TODO: Initialize root pointer to nullptr
+    // Basic constructor starting with no root.
+    Tree() : rootNode(nullptr) {
 
-    void createRoot(const string &id, const T &value);
-    // TODO: Allocate memory, assign id, assign data, set as root
+    }
+
+    //creates the root node. (should probably warn if it already exists).
+    void createRoot(const string &rootID, const T &value) {
+        if (rootNode != nullptr) {
+            // maybe throw an exception instead here?
+            return;
+        }
+
+        Node<T>* tempRoot = new Node<T>(rootID, value);
+
+        // Storing the newly created node
+        rootNode = tempRoot;
+        nodesList.push_back(tempRoot);  // I might have to check for duplicates
+
+    }
+
 
     void addNode(const string &parentID, const string &childID, const T &value);
-    // TODO: Find parent, create child, link parent to child
-    // TODO: Support repeated children under multiple parents
 
-    Node<T>* findNode(const string &id);
-    // TODO: Use DFS or BFS to search tree
+    // Looking up a node by ID
+    Node<T>* findNode(const string &searchID) {
 
+        for (auto* currentNode : nodesList) {
+            if (currentNode->id == searchID) {
+                return currentNode;  // Found it!
+            }
+        }
+        return nullptr; // If it's not there, shrug.
+    }
+
+    bool nodeExists(const string &nodeID) {
+        return findNode(nodeID) != nullptr;
+    }
+
+    // Dump everything. Still need to implement properly.
+    // Possibility of  making this const?
     void printAll();
-    // TODO: Print entire structure in readable form
+
+    void playGame();
 
     ~Tree();
-    // TODO: Free all allocated memory
+
+private:
+    Node<T>* rootNode;
+    vector<Node<T>*> nodesList;  // Keeping track of all nodes for now
+
+    // Maybe add some utility functions later
+
 };
 
 #endif //FA25EC3_TREE_H
