@@ -37,17 +37,19 @@ public:
     U data;
     vector<Node<U>*> children;
 
-    // TODO: Write constructor
-    // Node(const string &nodeID, const U &value);
+    Node(const string &nodeID, const U &value)
+        : id(nodeID), data(value) {}
 };
 
 template <typename T>
 class Tree {
 private:
     Node<T>* root;
+    vector<Node<T>*> allNodes;
+
 
 public:
-    Tree();
+    Tree() : root(nullptr) {}
     // TODO: Initialize root pointer to nullptr
 
     void createRoot(const string &id, const T &value);
