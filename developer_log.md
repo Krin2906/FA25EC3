@@ -43,7 +43,7 @@ Commit 2: createRoot + findNode using node list
 
  Commit 3 — Implement `addNode` and assignment-correct `printAll`
 
-### What I worked on:
+**What I worked on:**
 - Implemented the full `addNode()` function:
     - Looks up the parent using `findNode(parentID)`.
     - Checks if the child already exists in `nodesList`.
@@ -59,21 +59,53 @@ Commit 2: createRoot + findNode using node list
     - Kept the logic simple by iterating over `nodesList`
     - Adjusted the formatting to match the example in the project README.
 
-### Bugs / Issues:
+***Bugs / Issues:***
 - originally had a "fancier" print format with Unicode characters, but this didn’t match the assignment.
   I rewrote `printAll()` to match the exact expected structure.
 - Unsure whether to overwrite an existing child’s data if `childID` appears again for now tho I left the original text unchanged.
 
-### How I tried to solve them:
+***How I tried to solve them:***
 - Re-reviewed the project instructions to ensure correct output format.
 - Simplified `addNode()` logic to the essentials: find parent → find/create child → avoid duplicates → link.
 - Added a basic warning for missing parent nodes to help catch mistakes.
 
-### Files modified in this commit:
+***Files modified in this commit:***
 - `tree.h`
 
-### Commit Reasoning:
+***Commit Reasoning:***
 This commit makes the tree functional and verifiable.  
 I can now build the parent–child relationships and print the entire structure in the format the assignment expects.  
+
+
+Commit 4 — Destructor and playGame()
+
+***What I worked on:***
+- Implemented the `~Tree()` destructor:
+  - Loops through `nodesList` and deletes every node pointer.
+  - Clears `nodesList` and sets `rootNode` to `nullptr` so nothing is dangling.
+  - This is basically the cleanup phase for all the dynamic memory I’ve been allocating.
+- Implemented `playGame()` to turn the tree into an actual playable game:
+  - Starts at `rootNode` and prints the current node’s text.
+  - If the node has no children, it prints an ending message and stops.
+  - If there are children, it prints a numbered list of options and asks the user to pick one.
+  - Validates the user’s selection and moves to the chosen child node.
+  - Repeats until the story runs out of paths.
+
+***Bugs / Issues:***
+- Needed to remember that deleting the same node twice would be bad, so I relied on the fact that every node lives exactly once in `nodesList`.
+- Input handling in `playGame()` can get weird if the user types letters or out-of-range numbers, so I had to guard against that.
+
+***How I tried to solve them:***
+- Centralized deletion in the destructor by only deleting from `nodesList`, which I’ve been maintaining since the start.
+- Used `cin.clear()` and `cin.ignore(std::numeric_limits<streamsize>::max(), '\n')` to reset the input stream when the user enters something invalid.
+- Kept the gameplay loop simple: show text, show options, ask for a number, move to the next node.
+
+***Files modified in this commit:***
+- `tree.h`
+
+***Commit Reasoning:***
+This commit finishes off the main requirements:
+- The tree now cleans up all of its dynamic memory correctly when it’s destroyed.
+- The user can actually “play” through the story using the `playGame()` function and follow different paths.
 
 

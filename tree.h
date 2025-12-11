@@ -8,6 +8,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <limits>
+
 using namespace std;
 
 /*
@@ -157,15 +159,84 @@ public:
         cout << "======================" << endl;
     }
 
-    void playGame();
+    void playGame() {
+        // Just checking
+        if (rootNode == nullptr) {
+            cout << "No story loaded yet. (Root seems to be null?)" << endl;
+            return;
+        }
 
-    ~Tree();
+        cout << "===== Begin Adventure =====" << endl << endl;
 
+        Node<T>* currNode = rootNode;
+
+        // Loop until we run out of story or the player hits a dead end.
+        while (currNode != nullptr) {
+
+            // Display whatever text this node holds
+            cout << currNode->data << endl;
+
+            // If there’s nothing beyond this point, that’s the end of the line.
+            if (currNode->children.size() == 0) {
+                cout << "No more paths from here." << endl;
+                cout << "Your journey comes to an end." << endl << endl;
+                cout << "===== Adventure Complete =====" << endl;
+                break;
+            }
+
+            // Let the player see their options
+            cout << "Pick what to do next:" << endl;
+
+            for (int i = 0; i < static_cast<int>(currNode->children.size()); ++i) {
+                // Show the text of each possible next step
+                cout << "  " << (i + 1) << ". "
+                     << currNode->children[i]->data
+                     << endl;
+            }
+
+            // Grab user choice
+            int picked = 0;
+            cout << "Selection: ";
+            cin >> picked;
+
+            // Very low-effort validation — good enough for now
+            if (!cin || picked < 1 || picked > (int)currNode->children.size()) {
+
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+                cout << "That doesn't look right. Try again?" << endl;
+                continue;
+            }
+
+            // Advance to the chosen branch
+            currNode = currNode->children[picked - 1];
+
+            // Personal taste: a blank line after choices makes it easier on the eyes
+            cout << endl;
+        }
+
+
+    }
+
+    ~Tree() {
+       // I can just run through the whole thing and delete 'em all here.
+
+        for (auto* n : nodesList) {
+           if (n != nullptr) {
+                delete n;
+            }
+        }
+
+        nodesList.clear();
+
+        rootNode = nullptr;
+
+
+    }
 private:
     Node<T>* rootNode;
     vector<Node<T>*> nodesList;  // Keeping track of all nodes for now
-
-    // Maybe add some utility functions later
 
 };
 
