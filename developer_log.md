@@ -41,3 +41,39 @@ Commit 2: createRoot + findNode using node list
 **Commit reasoning (why this commit exists):**
 - This commit gets the basic "create a root" and "look up a node by ID" functionality working.
 
+ Commit 3 — Implement `addNode` and assignment-correct `printAll`
+
+### What I worked on:
+- Implemented the full `addNode()` function:
+    - Looks up the parent using `findNode(parentID)`.
+    - Checks if the child already exists in `nodesList`.
+    - Creates a new child node if it doesn’t exist yet.
+    - Reuses an existing child node if it already exists (so multiple parents can point to the same child).
+    - Prevents duplicate links by checking if the parent already has that child.
+    - Added a small warning message if the parent doesn’t exist.
+
+- Implemented the `printAll()` function so that it matches the assignment’s required formatting:
+    - Prints each node in the format: `Node <id>: <text>`
+    - Prints each child in the format: `Child -> <childID>`
+    - Prints `Child -> (none)` if the node has no children.
+    - Kept the logic simple by iterating over `nodesList`
+    - Adjusted the formatting to match the example in the project README.
+
+### Bugs / Issues:
+- originally had a "fancier" print format with Unicode characters, but this didn’t match the assignment.
+  I rewrote `printAll()` to match the exact expected structure.
+- Unsure whether to overwrite an existing child’s data if `childID` appears again for now tho I left the original text unchanged.
+
+### How I tried to solve them:
+- Re-reviewed the project instructions to ensure correct output format.
+- Simplified `addNode()` logic to the essentials: find parent → find/create child → avoid duplicates → link.
+- Added a basic warning for missing parent nodes to help catch mistakes.
+
+### Files modified in this commit:
+- `tree.h`
+
+### Commit Reasoning:
+This commit makes the tree functional and verifiable.  
+I can now build the parent–child relationships and print the entire structure in the format the assignment expects.  
+
+

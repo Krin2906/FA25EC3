@@ -65,7 +65,42 @@ public:
     }
 
 
-    void addNode(const string &parentID, const string &childID, const T &value);
+    void addNode(const string &parentID, const string &childID, const T &value) {
+        // First, find the parent.
+        Node<T>* parentNode = findNode(parentID);
+        if (parentNode == nullptr) {
+            // If the parent doesn't exist, there's not a lot to do.
+            cout << "Warning: Parent node '" << parentID
+                 << "' not found!" << endl;  // basic warning
+            return;
+        }
+
+        // Check if the child already exists.
+        Node<T>* childNode = findNode(childID);
+
+        if (childNode == nullptr) {
+            // Child doesn't exist yet, so make a new one.
+            childNode = new Node<T>(childID, value);
+            nodesList.push_back(childNode);
+        } else {
+            // Child already exists; assuming story text is consistent.
+            // If it's not, I could do: childNode->data = value;
+            // but I'm leaving it alone for now.
+        }
+
+        // Now link parent -> child, but avoid duplicates.
+        // This loop could probably be optimized but whatever.
+        for (auto* existingChild : parentNode->children) {
+            if (existingChild->id == childID) {
+                return; // Already linked, we're good.
+            }
+        }
+
+        parentNode->children.push_back(childNode);
+
+        // Debug output - commenting out for now.
+        // cout << "Added " << childID << " as child of " << parentID << endl;
+    }
 
     // Looking up a node by ID
     Node<T>* findNode(const string &searchID) {
@@ -84,7 +119,43 @@ public:
 
     // Dump everything. Still need to implement properly.
     // Possibility of  making this const?
-    void printAll();
+    void printAll() {
+        if (nodesList.empty()) {
+            cout << "Tree is empty." << endl;
+            return;
+        }
+
+        cout << "===== Story Tree =====" << endl;
+
+        // Just go through nodesList in the order nodes were added.
+        for (auto* currentNode : nodesList) {
+
+            if (currentNode == nullptr) {
+                continue;  // shouldn't happen, but safety check
+            }
+
+            // Example format:
+            // Node 1: You stand in a forest clearing
+            cout << "Node " << currentNode->id << ": " << currentNode->data << endl;
+
+            if (currentNode->children.empty()) {
+
+                cout << "  Child -> (none)" << endl;
+            } else {
+                // Print each child like:
+                //   Child -> 2
+                for (auto* childNode : currentNode->children) {
+                    if (childNode != nullptr) {
+                        cout << "  Child -> " << childNode->id << endl;
+                    }
+                }
+            }
+
+            cout << endl;  // spacing between nodes
+        }
+
+        cout << "======================" << endl;
+    }
 
     void playGame();
 
